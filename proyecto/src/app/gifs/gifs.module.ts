@@ -16,6 +16,9 @@ import { CarlistComponent } from './components/carlist/carlist.component';
   imports: [
     CommonModule 
   ],
+  providers:[
+
+  ],
   exports:[
     HomeComponent,
   ]
