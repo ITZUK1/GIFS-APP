@@ -1,42 +1,54 @@
 import { Injectable } from "@angular/core";
 
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { Gif } from "../interfaces/gifs.interface";
+import { Searchresponse } from '../interfaces/gifs.interface';
 
 
-@Injectable ({providedIn: 'root' })
-export class GifsService{
+
+
+@Injectable({ providedIn: 'root' })
+export class GifsService {
 
     _tagsHistory: string[] = [];
 
-    private apikey: string ='Y00w9FLELLMmD0ofcadzfiB43vednajD';
+    private apikey: string = 'Y00w9FLELLMmD0ofcadzfiB43vednajD';
+    private serviceUrl:string = 'https://api.giphy.com/v1/gifs';
 
 
-    constructor() {}
+    constructor(private http: HttpClient) { }
 
-    get tagsHistory () {
+    get tagsHistory() {
         return [...this._tagsHistory];
     }
 
-    private organizeHistory(tag:string){
+    private organizeHistory(tag: string) {
         tag = tag.toLowerCase();
 
-        if ( this._tagsHistory.includes(tag) ) {
-            this._tagsHistory = this._tagsHistory.filter( (oldtag) =>oldtag !== tag)
+        if (this._tagsHistory.includes(tag)) {
+            this._tagsHistory = this._tagsHistory.filter((oldtag) => oldtag !== tag)
         }
-        
-        this._tagsHistory.unshift ( tag );
-        this._tagsHistory = this._tagsHistory.splice(0,10);
+
+        this._tagsHistory.unshift(tag);
+        this._tagsHistory = this._tagsHistory.splice(0, 10);
 
     }
 
 
-      async searchTag (tag: string):Promise<void>{
+    searchTag(tag: string): void {
 
-        if (tag.length === 0) return;
+        if (tag.length === 0) return; 
         this.organizeHistory(tag);
 
-       /*  const resp = await fetch('https://api.giphy.com/v1/gifs/search?api_key=Y00w9FLELLMmD0ofcadzfiB43vednajD&q=valorant&limit=10')
-        const data =resp.json();
-        console.log(data) */
+        const params = new HttpParams()
+        .set('api_key',this.apikey)
+        .set('limit','10')
+        .set('q',tag)
+
+
+        this.http.get<Searchresponse>(`${this.serviceUrl}/search`,{params})
+            .subscribe(resp => { console.log(resp.data);});
+
     }
 
 
