@@ -2,8 +2,7 @@ export interface Searchresponse {
     data:       Gif[];
     meta:       Meta;
     pagination: Pagination;
-    patito: string;
-    perrito: number;
+    
 }
 
 export interface Gif {
